@@ -18,7 +18,7 @@ do
         bucket=$(tr -dc '[[:print:]]' <<< "$storage")
 
         # retrieve region
-        echo "... $bucket"
+        echo -e "... $bucket"
         location=$(aws s3api get-bucket-location \
                         --bucket "$bucket" \
                         --profile ${account_profiles[$id]} \

@@ -21,7 +21,7 @@ do
     status=$(echo $account_json | jq -r --argjson i $i '.[$i][3]')
     created=$(echo $account_json | jq -r --argjson i $i '.[$i][4]' | cut -c1-10)
 
-    echo "... $id : $name"
+    printf "...%3d : $id : $name\n" $i
     tags_json=$(aws organizations list-tags-for-resource \
                     --resource-id $id \
                     --profile $ROOT_PROFILE \

@@ -30,6 +30,7 @@ do
                             --output text`
         do
             table=$(tr -dc '[[:print:]]' <<< "$db")
+            echo -e "... $table"
             aws dynamodb describe-table \
                 --table-name=$table \
                 --query "[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, \`$table\`, Table.TableSizeBytes, Table.ProvisionedThroughput.[ReadCapacityUnits] | [0], Table.ProvisionedThroughput.[WriteCapacityUnits] | [0]]" \
@@ -84,6 +85,7 @@ do
             alloc=$(echo $rds_json | jq -r --argjson i $i '.[$i][6]')
             iops=$(echo $rds_json | jq -r --argjson i $i '.[$i][7]')
 
+            echo -e "... $dbid"
             arn="arn:aws:rds:$region:$id:db:$dbid"
             tags_json=$(aws rds list-tags-for-resource \
                             --resource-name "$arn" \
@@ -106,15 +108,74 @@ do
             --output text >> "$REPORT_PATH/rds_ri.txt"
 
         # workspaces IS NOT GA
-        if [ "$region" != "eu-north-1" ] && [ "$region" != "ap-south-1" ] && [ "$region" != "eu-west-3" ] && [ "$region" != "us-east-2" ] && [ "$region" != "us-west-1" ]
+        if [ "$region" != "eu-north-1" ] && [ "$region" != "eu-west-3" ] && [ "$region" != "ap-south-1" ] && [ "$region" != "ap-east-1" ] \
+            && [ "$region" != "us-east-2" ] && [ "$region" != "us-west-1" ] && [ "$region" != "me-south-1" ]
         then
-            # retrieve workspaces
+
+            # retrieve workspaces list
             echo -e "'${account_profiles[$id]}' in '$region' : listing workspaces..."
-            aws workspaces describe-workspaces \
-                --query "Workspaces[*].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, WorkspaceId, ComputerName, WorkspaceProperties.ComputeTypeName, WorkspaceProperties.RunningMode]" \
-                --profile ${account_profiles[$id]} \
-                --region $region \
-                --output text >> "$REPORT_PATH/workspace.txt"
+            ws_json=$(aws workspaces describe-workspaces \
+                            --profile ${account_profiles[$id]} \
+                            --region $region \
+                            --output json)
+            ws_nb=$(echo $ws_json | jq -r '.Workspaces | length')
+
+            # retrieve workspaces usage
+            for (( i=0; i<ws_nb; i++ ))
+            do
+                wsid=$(echo $ws_json | jq -r --argjson i $i '.Workspaces[$i].WorkspaceId')
+                name=$(echo $ws_json | jq -r --argjson i $i '.Workspaces[$i].ComputerName')
+                type=$(echo $ws_json | jq -r --argjson i $i '.Workspaces[$i].WorkspaceProperties.ComputeTypeName')
+                mode=$(echo $ws_json | jq -r --argjson i $i '.Workspaces[$i].WorkspaceProperties.RunningMode')
+
+                hours=0
+                if [ "$mode" == "AUTO_STOP" ]
+                then
+                    for metric in `aws cloudwatch get-metric-statistics \
+                                        --namespace AWS/WorkSpaces \
+                                        --metric-name Stopped \
+                                        --start-time $DATE_BEGIN \
+                                        --end-time $DATE_END \
+                                        --period 3600 \
+                                        --statistics Minimum \
+                                        --dimensions "Name=WorkspaceId,Value=$wsid" \
+                                        --query "Datapoints[*].[Minimum]" \
+                                        --profile ${account_profiles[$id]} \
+                                        --region $region \
+                                        --output text`
+                    do
+                        if [ ${metric%?} == "0.0" ]
+                        then
+                            (( hours++ ))
+                        fi
+                    done
+                elif [ "$mode" == "ALWAYS_ON" ]
+                then
+                    for metric in `aws cloudwatch get-metric-statistics \
+                                        --namespace AWS/WorkSpaces \
+                                        --metric-name UserConnected \
+                                        --start-time $DATE_BEGIN \
+                                        --end-time $DATE_END \
+                                        --period 3600 \
+                                        --statistics Maximum \
+                                        --dimensions "Name=WorkspaceId,Value=$wsid" \
+                                        --query "Datapoints[*].[Maximum]" \
+                                        --profile ${account_profiles[$id]} \
+                                        --region $region \
+                                        --output text`
+                    do
+                        if [ ${metric%?} == "1.0" ]
+                        then
+                            (( hours++ ))
+                        fi
+                    done
+                fi
+
+                echo -e "... $wsid"
+                echo -e "${account_zones[$id]}\t${account_divisions[$id]}\t${account_names[$id]}\t$region\t$wsid\t$name\t$type\t$mode\t$hours" >> "$REPORT_PATH/workspace.txt"
+
+            done
+
         fi
     done
 
@@ -128,7 +189,7 @@ do
         bucket=$(tr -dc '[[:print:]]' <<< "$storage")
 
         # retrieve region
-        echo "... $bucket"
+        echo -e "... $bucket"
         location=$(aws s3api get-bucket-location \
                         --bucket "$bucket" \
                         --profile ${account_profiles[$id]} \

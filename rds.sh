@@ -36,6 +36,7 @@ do
             alloc=$(echo $rds_json | jq -r --argjson i $i '.[$i][6]')
             iops=$(echo $rds_json | jq -r --argjson i $i '.[$i][7]')
 
+            echo -e "... $dbid"
             arn="arn:aws:rds:$region:$id:db:$dbid"
             tags_json=$(aws rds list-tags-for-resource \
                             --resource-name "$arn" \

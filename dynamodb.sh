@@ -23,6 +23,7 @@ do
                             --output text`
         do
             table=$(tr -dc '[[:print:]]' <<< "$db")
+            echo -e "... $table"
             aws dynamodb describe-table \
                 --table-name=$table \
                 --query "[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, \`$table\`, Table.TableSizeBytes, Table.ProvisionedThroughput.[ReadCapacityUnits] | [0], Table.ProvisionedThroughput.[WriteCapacityUnits] | [0]]" \
