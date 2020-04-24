@@ -107,6 +107,15 @@ do
             --region $region \
             --output text >> "$REPORT_PATH/rds_ri.txt"
 
+        # retrieve snapshots
+        echo -e "'${account_profiles[$id]}' in '$region' : listing snapshots older than $SNAP_LIMIT..."
+        aws ec2 describe-snapshots \
+            --owner-ids $id \
+            --query "Snapshots[?StartTime<'$SNAP_LIMIT'].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, SnapshotId, StartTime, VolumeId, VolumeSize]" \
+            --profile ${account_profiles[$id]} \
+            --region $region \
+            --output text >> "$REPORT_PATH/snapshot.txt"
+
         # workspaces IS NOT GA
         if [ "$region" != "eu-north-1" ] && [ "$region" != "eu-west-3" ] && [ "$region" != "ap-south-1" ] && [ "$region" != "ap-east-1" ] \
             && [ "$region" != "us-east-2" ] && [ "$region" != "us-west-1" ] && [ "$region" != "me-south-1" ]

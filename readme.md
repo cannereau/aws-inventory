@@ -17,6 +17,9 @@ In the *constant.sh* file, several values must be configured :
 - **ORG_ROLE** = name of the role assumed by the **ROOT_PROFILE** to discover each AWS account
 - **REPORT_PATH** = folder path to store report files for each type of resource
 - **DATE_BEGIN** and **DATE_END** = period used for CloudWatch metrics (eg S3 capacity)
+- **SNAP_LIMIT** = date before which snapshots are considered as too old
 
 ## Usage
 Each script can be run independently to retrieve a type of resource through the AWS organization
+
+The script *_inv_finops.sh* aggregate some elementary scripts to FinOps purposes

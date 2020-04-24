@@ -7,7 +7,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "StandardStorage"}
                     ]
                 },
@@ -15,7 +15,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         },
         {
@@ -25,7 +25,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "StandardIAStorage"}
                     ]
                 },
@@ -33,7 +33,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         },
         {
@@ -43,7 +43,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "IntelligentTieringFAStorage"}
                     ]
                 },
@@ -51,7 +51,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         },
         {
@@ -61,7 +61,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "IntelligentTieringIAStorage"}
                     ]
                 },
@@ -69,7 +69,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         },
         {
@@ -79,7 +79,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "OneZoneIAStorage"}
                     ]
                 },
@@ -87,7 +87,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         },
         {
@@ -97,7 +97,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "ReducedRedundancyStorage"}
                     ]
                 },
@@ -105,7 +105,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         },
         {
@@ -115,7 +115,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "GlacierStorage"}
                     ]
                 },
@@ -123,7 +123,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         },
         {
@@ -133,7 +133,7 @@
                     "Namespace": "AWS/S3",
                     "MetricName": "BucketSizeBytes",
                     "Dimensions": [
-                        {"Name": "BucketName", "Value": "vir-itg-bk-np-repo"},
+                        {"Name": "BucketName", "Value": "testcloudfrontdistribution"},
                         {"Name": "StorageType", "Value": "DeepArchiveStorage"}
                     ]
                 },
@@ -141,7 +141,7 @@
                 "Stat": "Average",
                 "Unit": "Bytes"
             },
-            "Label": "vir-itg-bk-np-repo",
+            "Label": "testcloudfrontdistribution",
             "ReturnData": true
         }
     ]
