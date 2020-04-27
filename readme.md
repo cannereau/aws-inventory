@@ -23,3 +23,4 @@ In the *constant.sh* file, several values must be configured :
 Each script can be run independently to retrieve a type of resource through the AWS organization
 
 The script *_inv_finops.sh* aggregate some elementary scripts to FinOps purposes
+The script *_inv_resources.sh* aggregate all elementary scripts to inventory purposes

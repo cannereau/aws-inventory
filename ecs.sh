@@ -14,8 +14,8 @@ do
                         --profile $ROOT_PROFILE \
                         --output text`
     do
-        # retrieve clusters
-        echo -e "'${account_profiles[$id]}' in '$region' : listing clusters ecs..."
+        # retrieve ecs clusters
+        echo -e "'${account_profiles[$id]}' in '$region' : listing ecs clusters ..."
         for cluster in `aws ecs list-clusters \
                             --query "clusterArns[*]" \
                             --profile ${account_profiles[$id]} \

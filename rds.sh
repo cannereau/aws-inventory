@@ -4,6 +4,7 @@ source config.sh
 echo -e "Initiating report files..."
 echo -e "Zone\tDivision\tAccount\tRegion\tInstanceID\tType\tState\tEngine\tMultiAZ\tStorage\tSize\tIops\tApplication\tEnvironnement" > "$REPORT_PATH/rds_instance.txt"
 echo -e "Zone\tDivision\tAccount\tRegion\tInstanceID\tType\tMultiAZ\tOffering\tFixedPrice\tStartTime\tDuration\tRecurringCharges" > "$REPORT_PATH/rds_ri.txt"
+echo -e "Zone\tDivision\tAccount\tRegion\tSnapshotID\tDate\tDatabaseID\tSize" > "$REPORT_PATH/rds_snapshot.txt"
 
 # loop through accounts
 echo -e "Retrieving data..."
@@ -57,6 +58,14 @@ do
             --profile ${account_profiles[$id]} \
             --region $region \
             --output text >> "$REPORT_PATH/rds_ri.txt"
+
+        # retrieve rds snapshot
+        echo -e "'${account_profiles[$id]}' in '$region' : listing rds snapshots older than $SNAP_LIMIT..."
+        aws rds describe-db-snapshots \
+            --query "DBSnapshots[?SnapshotCreateTime<'$SNAP_LIMIT'].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, DBSnapshotIdentifier, SnapshotCreateTime, DBInstanceIdentifier, AllocatedStorage]" \
+            --profile ${account_profiles[$id]} \
+            --region $region \
+            --output text >> "$REPORT_PATH/rds_snapshot.txt"
 
     done
 done

@@ -12,6 +12,12 @@ echo -e "Zone\tDivision\tAccount\tRegion\tInstanceID\tType\tMultiAZ\tOffering\tF
 echo -e "Zone\tDivision\tAccount\tRegion\tBucket\tStandardFA\tStandardIA\tIntelligentFA\tIntelligentIA\tOneZoneIA\tRRS\tGlacier\tDeepArchive" > "$REPORT_PATH/s3.txt"
 echo -e "Zone\tDivision\tAccount\tRegion\tWorkspaceID\tComputerName\tType\tMode\tHoursUsed" > "$REPORT_PATH/workspace.txt"
 
+echo -e "Zone\tDivision\tAccount\tRegion\tAPI Gateway" > "$REPORT_PATH/api.txt"
+echo -e "Zone\tDivision\tAccount\tRegion\tApplication\tEnvironment" > "$REPORT_PATH/beanstalk.txt"
+echo -e "Zone\tDivision\tAccount\tRegion\tCluster\tType\tEngine\tNodes" > "$REPORT_PATH/cache.txt"
+echo -e "Zone\tDivision\tAccount\tRegion\tCluster\tContainers\tTasks\tServices" > "$REPORT_PATH/ecs.txt"
+echo -e "Zone\tDivision\tAccount\tRegion\tFunction\tRuntime\tCodeSize" > "$REPORT_PATH/lambda.txt"
+
 # loop through accounts
 echo -e "Retrieving data..."
 for id in "${!account_names[@]}"
@@ -193,8 +199,57 @@ do
                 echo -e "${account_zones[$id]}\t${account_divisions[$id]}\t${account_names[$id]}\t$region\t$wsid\t$name\t$type\t$mode\t$hours" >> "$REPORT_PATH/workspace.txt"
 
             done
-
         fi
+
+        # retrieve api gateways
+        echo -e "'${account_profiles[$id]}' in '$region' : listing api gateways..."
+        aws apigateway get-rest-apis \
+            --query "items[*].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, name]" \
+            --profile ${account_profiles[$id]} \
+            --region $region \
+            --output text >> "$REPORT_PATH/api.txt"
+
+        # retrieve beanstalk environment
+        echo -e "'${account_profiles[$id]}' in '$region' : listing beanstalk environments..."
+        aws elasticbeanstalk describe-environments \
+            --query "Environments[*].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, ApplicationName, EnvironmentName]" \
+            --profile ${account_profiles[$id]} \
+            --region $region \
+            --output text >> "$REPORT_PATH/beanstalk.txt"
+
+        # retrieve elasticaches
+        echo -e "'${account_profiles[$id]}' in '$region' : listing elasticaches..."
+        aws elasticache describe-cache-clusters \
+            --query "CacheClusters[*].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, CacheClusterId, CacheNodeType, Engine, NumCacheNodes]" \
+            --profile ${account_profiles[$id]} \
+            --region $region \
+            --output text >> "$REPORT_PATH/cache.txt"
+
+        # retrieve ecs clusters
+        echo -e "'${account_profiles[$id]}' in '$region' : listing ecs clusters ..."
+        for cluster in `aws ecs list-clusters \
+                            --query "clusterArns[*]" \
+                            --profile ${account_profiles[$id]} \
+                            --region $region \
+                            --output text`
+        do
+            # retrieve details
+            echo "... $cluster"
+            aws ecs describe-clusters \
+                --cluster $cluster \
+                --query "clusters[0].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, clusterName, registeredContainerInstancesCount, runningTasksCount, activeServicesCount]" \
+                --profile ${account_profiles[$id]} \
+                --region $region \
+                --output text >> "$REPORT_PATH/ecs.txt"
+        done
+
+        # retrieve lambdas
+        echo -e "'${account_profiles[$id]}' in '$region' : listing lambdas..."
+        aws lambda list-functions \
+            --query "Functions[*].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, FunctionName, Runtime, CodeSize]" \
+            --profile ${account_profiles[$id]} \
+            --region $region \
+            --output text >> "$REPORT_PATH/lambda.txt"
     done
 
     # retrieve buckets

@@ -14,8 +14,8 @@ do
                         --profile $ROOT_PROFILE \
                         --output text`
     do
-        # retrieve environment
-        echo -e "'${account_profiles[$id]}' in '$region' : listing environments..."
+        # retrieve beanstalk environment
+        echo -e "'${account_profiles[$id]}' in '$region' : listing beanstalk environments..."
         aws elasticbeanstalk describe-environments \
             --query "Environments[*].[\`${account_zones[$id]}\`, \`${account_divisions[$id]}\`, \`${account_names[$id]}\`, \`$region\`, ApplicationName, EnvironmentName]" \
             --profile ${account_profiles[$id]} \
