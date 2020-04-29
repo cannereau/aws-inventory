@@ -4,8 +4,8 @@ This project is a list of Bash script files to build AWS inventories through an 
 
 ## Prerequisites
 These scripts need 2 tools :
-- [AWS CLI](https://docs.aws.amazon.com/fr_fr/cli/latest/userguide/cli-chap-welcome.html)
-- [jq](https://stedolan.github.io/jq/)
+* [AWS CLI](https://docs.aws.amazon.com/fr_fr/cli/latest/userguide/cli-chap-welcome.html)
+* [jq](https://stedolan.github.io/jq/)
 
 An AWS CLI profile for the master account of the AWS organization must be registered using the command :
 

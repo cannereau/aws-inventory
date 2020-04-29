@@ -24,7 +24,7 @@ for (( i=0; i<account_nb; i++ ))
 do
     id=$(echo $account_json | jq -r --argjson i $i '.[$i][0]')
     status=$(echo $account_json | jq -r --argjson i $i '.[$i][2]')
-    if [ "$status" == "ACTIVE" ] && [ "$id" != "128985509146" ]
+    if [ "$status" == "ACTIVE" ]
     then
         account_tags=$(aws organizations list-tags-for-resource \
                             --resource-id $id \
