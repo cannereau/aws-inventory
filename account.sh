@@ -19,7 +19,7 @@ do
     name=$(echo $account_json | jq -r --argjson i $i '.[$i][1]')
     email=$(echo $account_json | jq -r --argjson i $i '.[$i][2]')
     status=$(echo $account_json | jq -r --argjson i $i '.[$i][3]')
-    created=$(echo $account_json | jq -r --argjson i $i '.[$i][4]' | cut -c1-10)
+    created=$(echo $account_json | jq -r --argjson i $i '.[$i][4]')
 
     printf "...%3d : $id : $name\n" $i
     tags_json=$(aws organizations list-tags-for-resource \
@@ -38,5 +38,5 @@ do
     project=$(echo $tags_json | jq -r '.Tags[] | select(.Key == "Project") | .Value')
     zone=$(echo $tags_json | jq -r '.Tags[] | select(.Key == "RegionBU") | .Value')
 
-    echo -e "$zone\t$division\t$name\t$id\t$email\t$status\t$country\t$project\t$application\t$owner\t$cost\t$environ\t$brand\t$prof\t$created" >> "$REPORT_PATH/account.txt"
+    echo -e "$zone\t$division\t$name\t$id\t$email\t$status\t$country\t$project\t$application\t$owner\t$cost\t$environ\t$brand\t$prof\t$(date +%d/%m/%Y -d @$created)" >> "$REPORT_PATH/account.txt"
 done
