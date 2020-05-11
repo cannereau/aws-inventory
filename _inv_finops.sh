@@ -9,6 +9,7 @@ echo -e "Zone\tDivision\tAccount\tRegion\tReservedID\tType\tPlatform\tCount\tOff
 echo -e "Zone\tDivision\tAccount\tRegion\tSnapshotID\tDate\tVolumeID\tSize" > "$REPORT_PATH/ec2_snapshot.txt"
 echo -e "Zone\tDivision\tAccount\tRegion\tInstanceID\tType\tState\tEngine\tMultiAZ\tStorage\tSize\tIops\tApplication\tEnvironnement" > "$REPORT_PATH/rds_instance.txt"
 echo -e "Zone\tDivision\tAccount\tRegion\tInstanceID\tType\tMultiAZ\tOffering\tFixedPrice\tStartTime\tDuration\tRecurringCharges" > "$REPORT_PATH/rds_ri.txt"
+echo -e "Zone\tDivision\tAccount\tRegion\tSnapshotID\tDate\tDatabaseID\tSize" > "$REPORT_PATH/rds_snapshot.txt"
 echo -e "Zone\tDivision\tAccount\tRegion\tBucket\tStandardFA\tStandardIA\tIntelligentFA\tIntelligentIA\tOneZoneIA\tRRS\tGlacier\tDeepArchive" > "$REPORT_PATH/s3.txt"
 echo -e "Zone\tDivision\tAccount\tRegion\tWorkspaceID\tComputerName\tType\tMode\tHoursUsed" > "$REPORT_PATH/workspace.txt"
 
